@@ -1,0 +1,6 @@
+{
+  "sleep_milliseconds":1000, // 无落地数据时的休眠时间
+  "mysql_retry_times":3,     // 落地失败重试次数
+  "redis_expir_time":168,    // 落地失败重试次数
+  "data_limit_size":15728640 // redis落地数据的最大长度 15 * 1024 * 1024 字节
+}

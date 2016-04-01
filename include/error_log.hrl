@@ -1,0 +1,12 @@
+%% 日志宏
+-define(DEFAULT_SIZE, 102400).
+-define(LOG_ERROR(F), lager:dispatch_log(error, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, [], ?DEFAULT_SIZE)).
+-define(LOG_ERROR(F, A), lager:dispatch_log(error, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}],  F, A, ?DEFAULT_SIZE)).
+-define(LOG_INFO(F), lager:dispatch_log(info, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, [], ?DEFAULT_SIZE)).
+-define(LOG_INFO(F, A), lager:dispatch_log(info, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, A, ?DEFAULT_SIZE)).
+-define(LOG_DEBUG(F), lager:dispatch_log(debug, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, [], ?DEFAULT_SIZE)).
+-define(LOG_DEBUG(F, A), lager:dispatch_log(debug, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, A, ?DEFAULT_SIZE)).
+-define(LOG_CRASH(F), lager:dispatch_log(crash, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, [], ?DEFAULT_SIZE)).
+-define(LOG_CRASH(F, A), lager:dispatch_log(crash, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, A, ?DEFAULT_SIZE)).
+-define(LOG_EMERGENCY(F), lager:dispatch_log(emergency, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, [], ?DEFAULT_SIZE)).
+-define(LOG_EMERGENCY(F, A), lager:dispatch_log(emergency, [{module, ?MODULE}, {line, ?LINE}, {pid, self()}], F, A, ?DEFAULT_SIZE)).

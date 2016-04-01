@@ -1,0 +1,6 @@
+{
+  "crypto":false,             //是否加密
+  "is_open_verfi":true,
+  "login_restriction":false,  // 白名单模式 true=开启 false=关闭
+  "server_version":"vsn-name" // 服务端版本
+}
