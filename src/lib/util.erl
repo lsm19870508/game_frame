@@ -156,6 +156,13 @@ to_bool(_D) ->
 to_tuple(T) when is_tuple(T) -> T;
 to_tuple(T) -> {T}.
 
+%% @doc convert float to string,  f2s(1.5678) -> 1.57
+f2s(N) when is_integer(N) ->
+  integer_to_list(N) ++ ".00";
+f2s(F) when is_float(F) ->
+  [A] = io_lib:format("~.2f", [F]),
+  A.
+
 %% @doc get data type {0=integer,1=list,2=atom,3=binary}
 get_type(DataValue,DataType)->
   case DataType of
@@ -232,6 +239,37 @@ list_to_atom2(List) when is_list(List) ->
     {'EXIT', _} -> erlang:list_to_atom(List);
     Atom when is_atom(Atom) -> Atom
   end.
+
+get_process_info_and_zero_value(InfoName) ->
+  PList = erlang:processes(),
+  ZList = lists:filter(
+    fun(T) ->
+      case erlang:process_info(T, InfoName) of
+        {InfoName, 0} -> false;
+        _ -> true
+      end
+    end, PList ),
+  ZZList = lists:map(
+    fun(T) -> {T, erlang:process_info(T, InfoName), erlang:process_info(T, registered_name)}
+    end, ZList ),
+  [ length(PList), InfoName, length(ZZList), ZZList ].
+
+get_process_info_and_large_than_value(InfoName, Value) ->
+  PList = erlang:processes(),
+  ZList = lists:filter(
+    fun(T) ->
+      case erlang:process_info(T, InfoName) of
+        {InfoName, VV} ->
+          if VV >  Value -> true;
+            true -> false
+          end;
+        _ -> true
+      end
+    end, PList ),
+  ZZList = lists:map(
+    fun(T) -> {T, erlang:process_info(T, InfoName), erlang:process_info(T, registered_name)}
+    end, ZList ),
+  [ length(PList), InfoName, Value, length(ZZList), ZZList ].
 
 get_msg_queue() ->
   io:fwrite("process count:~p~n~p value is not 0 count:~p~nLists:~p~n",

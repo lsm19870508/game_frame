@@ -57,7 +57,7 @@
 
 -define(RPOP(Key), ["RPOP" , Key]).
 
--define(LLEN(Key), ["LLEN" , Values]).
+-define(LLEN(Key), ["LLEN" , Key]).
 
 -define(LRANGE(Key,Start,End),["LRANGE",Key,Start,End]).
 

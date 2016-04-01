@@ -111,7 +111,7 @@ handle_call({dequeue},_From,State)->
 
 handle_call({get_queue_len},_From,State)->
   Result = redis:llen(?MYSQL_WRITE_LIST),
-  {reply,Result,State}.
+  {reply,Result,State};
 
 handle_call(_Request, _From, State) ->
   {reply, ok, State}.

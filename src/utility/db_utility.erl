@@ -18,4 +18,4 @@ pack_data(Msg)->
 
 %%数据包解包
 unpack_data(Msg)->
-  string_to_term(binary_to_list(Msg)).
+  util:string_to_term(binary_to_list(Msg)).

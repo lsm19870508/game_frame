@@ -90,10 +90,9 @@ init([]) ->
     timeout() | hibernate} |
   {stop, Reason :: term(), NewState :: #state{}}).
 writing(timeout,State)->
-
-  ;
+  do_write(State);
 writing(_Event, State) ->
-  {next_state, writing, State}.
+  do_write(State).
 
 %%--------------------------------------------------------------------
 %% @private
