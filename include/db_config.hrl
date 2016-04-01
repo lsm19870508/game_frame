@@ -71,6 +71,7 @@
 
 %%数据库写入队列，所用的临时表list
 -define(MYSQL_WRITE_LIST,<<"game_frame:mysql_write_queue">>).
+-define(CURR_WRITING_MSG,<<"game_frame:mysql_writing_msg">>).
 -define(MAX_MYSQL_RETRY_TIME,5).
 
 %%数据库队列用的结构

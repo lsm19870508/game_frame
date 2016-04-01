@@ -11,6 +11,7 @@
 
 -behaviour(gen_fsm).
 -include("db_config.hrl").
+-include("error_log.hrl").
 
 %% API
 -export([start_link/0]).
@@ -241,6 +242,14 @@ do_write(Msg,State)->
       {next_state,writing,#state{}};
     _->
       RetryTimes = State#state.try_times,
-      case RetryTimes>=5
-      {next}
-  end
+      case RetryTimes>=?MAX_MYSQL_RETRY_TIME of
+        true->
+          %% 如果写代码次数超过上限
+          %% 单独写一个log，方便查找log
+          ?LOG_ERROR("Max MySQL retry times reached, Msg is: ~p",
+            [[Msg]]),
+          {next_state,writing,#state{}};
+        _->
+          {next_state,writing,#state{try_times=RetryTimes + 1}}
+      end
+  end.
