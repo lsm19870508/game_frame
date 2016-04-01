@@ -31,6 +31,7 @@
 -define(SERVER, ?MODULE).
 -define(MAX_PACKET,4096).%%mysql5.6默认允许的最大的包上限
 -define(TIMEOUT_SPAN, 100).%%休眠间隔
+-deinfe(ZERO_SPAN,0).%%立即执行
 
 -record(state, {try_times=0}).%%重试次数
 
@@ -90,8 +91,10 @@ init([]) ->
     timeout() | hibernate} |
   {stop, Reason :: term(), NewState :: #state{}}).
 writing(timeout,State)->
+  io:format("writing waiting timeout~!"),
   do_write(State);
 writing(_Event, State) ->
+  io:format("handle writing event~!"),
   do_write(State).
 
 %%--------------------------------------------------------------------
@@ -118,6 +121,7 @@ writing(_Event, State) ->
     NewState :: #state{}}).
 writing(_Event, _From, State) ->
   Reply = ok,
+  io:format("handle writing 3~!"),
   {reply, Reply, writing, State}.
 
 %%--------------------------------------------------------------------
@@ -136,6 +140,7 @@ writing(_Event, _From, State) ->
     timeout() | hibernate} |
   {stop, Reason :: term(), NewStateData :: #state{}}).
 handle_event(_Event, StateName, State) ->
+  io:format("handle handle_event 3~!"),
   {next_state, StateName, State}.
 
 %%--------------------------------------------------------------------

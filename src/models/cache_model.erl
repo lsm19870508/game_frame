@@ -14,7 +14,7 @@
 
 %%
 init_sciense_cache()->
-  List = mysql_model:get_all("select * from scisence"),
+  %%List = mysql_model:get_all("select * from scisence"),
   ok.
 
 init_user_cache()->

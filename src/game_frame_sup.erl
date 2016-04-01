@@ -28,7 +28,7 @@ init([]) ->
     ConfigWorker = {game_config, {game_config, start_link, [ConfigPath]},
     permanent, 5000, worker, [game_config]},
 
-    {ok, { {one_for_one, 5, 10}, [ConfigWorker,?CHILD(lager_controller, worker)]} }.
+    {ok, { {one_for_one, 5, 10}, [ConfigWorker,?CHILD(lager_controller, worker),?CHILD(game_db_sup,supervisor)]} }.
 
 fetch_config_path() ->
     case init:get_argument(config_path) of
