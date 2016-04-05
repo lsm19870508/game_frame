@@ -12,7 +12,8 @@
 
 %% API
 -export([pid_to_binary/1,binary_to_pid/1]).
--export([conver_list_to_kvlist/1]).
+-export([convert_list_to_kvlist/1]).
+-export([convert_list_to_map/1]).
 -export([term_to_string/1,string_to_term/1]).
 -export([term_to_bitstring/1,bitstring_to_term/1]).
 -export([set_bytes/2,get_bytes/2]).
@@ -40,8 +41,8 @@ binary_to_pid(BitString) when is_binary(BitString)->
   list_to_pid(binary_to_list(BitString)).
 
 %%将list  [k1,v1,k2,v2...]转换成kvlist [{k1,v1},{k2,v2},....]
--spec(conver_list_to_kvlist(List::list()) -> list()).
-conver_list_to_kvlist(List) when is_list(List)->
+-spec(convert_list_to_kvlist(List::list()) -> list()).
+convert_list_to_kvlist(List) when is_list(List)->
   F = fun(X,{IsPass,Key,Result})->
         if
           not(IsPass)-> {true,X,Result};
@@ -49,6 +50,18 @@ conver_list_to_kvlist(List) when is_list(List)->
         end
       end,
   {_,_,Return} = lists:foldl(F,{false,{},[]},List),
+  Return.
+
+%%将list  [k1,v1,k2,v2...]转换成map {k1=>v1,key2=>v2...}
+-spec(convert_list_to_map(List::list()) -> map()).
+convert_list_to_map(List) when is_list(List)->
+  F = fun(X,{IsPass,Key,Result})->
+    if
+      not(IsPass)-> {true,X,Result};
+      true -> {false,{},Result#{Key=>X}}
+    end
+      end,
+  {_,_,Return} = lists:foldl(F,{false,{},#{}},List),
   Return.
 
 %% term序列化，term转换为string格式，e.g., [{a},1] => "[{a},1]"

@@ -8,6 +8,7 @@
 %% ====================================================================
 -export([get_values/2, get_values/3, get_get/3, get_get/4, gets/2, sets/3, gets/3,
   puts/3, get_count/2, add/3]).
+-export([convert_list_to_map/1]).
 
 add(Key, AddVal, Map) ->
   OldVal = maps:get(Key, Map),
@@ -80,6 +81,20 @@ get_count(Fun, Map) ->
           InCount
       end
     end, 0, Map).
+
+%%将list  [k1,v1,k2,v2...]转换成map {k1=>v1,key2=>v2...}
+%%Author:李世铭
+%%April 5th,2016
+-spec(convert_list_to_map(List::list()) -> map()).
+convert_list_to_map(List) when is_list(List)->
+  F = fun(X,{IsPass,Key,Result})->
+    if
+      not(IsPass)-> {true,X,Result};
+      true -> {false,{},Result#{Key=>X}}
+    end
+      end,
+  {_,_,Return} = lists:foldl(F,{false,{},#{}},List),
+  Return.
 
 %% ====================================================================
 %% Internal functions

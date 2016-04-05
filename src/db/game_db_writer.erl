@@ -233,6 +233,8 @@ do_write(State)->
   case Msg of
     %%队列已空
     undefined->
+%%      CurrTime = time_utility:unixtime(),
+%%      io:format("end writing test time is:~w~n",[{CurrTime}]),
       {next_state,writing,#state{},?TIMEOUT_SPAN};
     _->
       do_write(Msg,State)
@@ -279,10 +281,14 @@ do_write(Msg,State)->
 
 test_db_write()->
   Rand = util:rand(1,10000),
-  Sql = mysql:make_replace_sql(account,["id"],[Rand]),
-  State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,sql = Sql},
+  %%Sql = mysql:make_replace_sql(account,["id"],[Rand]),
+  %%State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,sql = Sql},
+  State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,prepare = true,prepare_atom = account_replace,prepare_param = [Rand]},
   game_db_queue:enqueue(State).
 
 test_db_write(N)->
+  CurrTime = time_utility:unixtime(),
+  io:format("start writing test time is:~w~n",[{CurrTime}]),
+
   L = lists:seq(1,N),
   [test_db_write() || X<-L].

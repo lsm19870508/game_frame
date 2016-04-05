@@ -58,6 +58,7 @@ start_mysql_pools() ->
 
 %%进行某些语句的预编译
 prepare_queries()->
+  ok = emysql:prepare(account_replace, <<"replace into account set id=?">>),
   ok.
 
 %% ====================================================================
@@ -85,10 +86,10 @@ execute(POOL, QUERY)->
 %%运行预编译语句
 run_prepare(SqlId,Args)->
   case emysql:execute(default, SqlId, Args) of
-    {result_packet, _, _, _} ->
-      ok;
+    {result_packet, _, RS, _} ->
+      {ok, RS};
     {ok_packet, _, _, _, _, _, _} ->
-      ok;
+      {ok, 0};
     {error_packet,_,_,_,DB_ERROR_MSG} ->
       ?LOG_ERROR("~n* DBERROR:~p *~n", [DB_ERROR_MSG]),
       {error, DB_ERROR_MSG};
@@ -99,10 +100,10 @@ run_prepare(SqlId,Args)->
 %%运行预编译语句
 run_prepare(POOL,SqlId,Args)->
   case emysql:execute(POOL, SqlId, Args) of
-    {result_packet, _, _, _} ->
-      ok;
+    {result_packet, _, RS, _} ->
+      {ok, RS};
     {ok_packet, _, _, _, _, _, _} ->
-      ok;
+      {ok, 0};
     {error_packet,_,_,_,DB_ERROR_MSG} ->
       ?LOG_ERROR("~n* DBERROR:~p *~n", [DB_ERROR_MSG]),
       {error, DB_ERROR_MSG};
