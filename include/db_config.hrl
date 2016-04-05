@@ -69,6 +69,10 @@
 
 -define(ZRANGE(OrderSet,Start,End),["ZRANGE",OrderSet,Start,End]).
 
+-define(PERSIST(Key),["PERSIST",Key]).
+
+-define(EXPIRE(Key,Time),["EXPIRE",Key,Time]).
+
 %%数据库写入队列，所用的临时表list
 -define(MYSQL_WRITE_LIST,<<"game_frame:mysql_write_queue">>).
 -define(CURR_WRITING_MSG,<<"game_frame:mysql_writing_msg">>).
@@ -80,6 +84,7 @@
             prepare_atom=undefined,%%预编译标识
             prepare_param=0,%%预编译参数
             poolid = default,
+            redis_key = <<"">>,
             sql= <<"">> %%如果未预编译则填写语句
 }
 ).

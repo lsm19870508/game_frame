@@ -33,6 +33,24 @@
 -export([zadd/2,zadd/3]).
 -export([zincr/3,zincr/4]).
 -export([zrange/3,zrange/4]).
+-export([persist/1,persist/2]).
+-export([expire/2,expire/3]).
+
+%%persist
+%%http://www.yiibai.com/redis/keys_persist.html
+persist(Key) ->
+  persist(?REDIS_DEFAULT_POOL,Key).
+
+persist(PoolName,Key) ->
+  redis_q(PoolName,?PERSIST(Key),?REDIS_TIMEOUT).
+
+%%expire
+%%http://www.yiibai.com/redis/keys_expire.html
+expire(Key, ExpireTime) ->
+  expire(?REDIS_DEFAULT_POOL,Key,ExpireTime).
+
+expire(PoolName,Key,ExpireTime)->
+  redis_q(PoolName,?EXPIRE(Key,ExpireTime),?REDIS_TIMEOUT).
 
 %%incr
 incr(Key)->

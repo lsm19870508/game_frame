@@ -27,6 +27,7 @@
 -export([get_memory/0,get_memory/1]).
 -export([get_heap/0,get_heap/1]).
 -export([get_processes/0]).
+-export([rand/2]).
 
 %%将pid转换为binary
 -spec(pid_to_binary(Pid::pid()) -> binary()).
@@ -294,3 +295,18 @@ get_heap(Value) ->
 get_processes() ->
   io:fwrite("process count:~p~n~p value is large than ~p count:~p~nLists:~p~n",
     get_process_info_and_large_than_value(memory, 0) ).
+
+%% 产生一个介于Min到Max之间的随机整数
+rand(Same, Same) -> Same;
+rand(Min, Max) ->
+  %% 如果没有种子，将从核心服务器中去获取一个种子，以保证不同进程都可取得不同的种子
+  case get("rand_seed") of
+    undefined ->
+      RandSeed = mod_rand:get_seed(),
+      random:seed(RandSeed),
+      put("rand_seed", RandSeed);
+    _ -> skip
+  end,
+  %% random:seed(erlang:now()),
+  M = Min - 1,
+  random:uniform(Max - M) + M.

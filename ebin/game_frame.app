@@ -6,6 +6,8 @@
               {mod,{game_frame_app,[]}},
               {env,[]},
               {modules,[cache_model,conversion_utility,crypto_model,
-                        game_config,game_db_cache,game_db_queue,game_db_sup,
-                        game_frame_app,game_frame_sup,lager_controller,mysql,
-                        redis,root_http_handler,util]}]}.
+                        db_utility,game_config,game_db_cache,game_db_queue,
+                        game_db_sup,game_db_writer,game_frame_app,
+                        game_frame_sup,lager_controller,map_utility,
+                        math_utility,mod_rand,mysql,redis,root_http_handler,
+                        util]}]}.

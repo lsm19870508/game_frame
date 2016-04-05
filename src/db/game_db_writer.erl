@@ -12,11 +12,13 @@
 -behaviour(gen_fsm).
 -include("db_config.hrl").
 -include("error_log.hrl").
+-include("config_keys.hrl").
 
 %% API
 -export([start_link/0]).
 
 -export([write_sql/0]).
+-export([test_db_write/1]).
 
 %% gen_fsm callbacks
 -export([init/1,
@@ -31,7 +33,7 @@
 -define(SERVER, ?MODULE).
 -define(MAX_PACKET,4096).%%mysql5.6默认允许的最大的包上限
 -define(TIMEOUT_SPAN, 100).%%休眠间隔
--deinfe(ZERO_SPAN,0).%%立即执行
+-define(ZERO_SPAN,0).%%立即执行
 
 -record(state, {try_times=0}).%%重试次数
 
@@ -72,7 +74,8 @@ start_link() ->
   {ok, StateName :: atom(), StateData :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
 init([]) ->
-  {ok, writing, #state{}}.
+  io:format("db_writer is ready!~n"),
+  {ok, writing, #state{},?ZERO_SPAN}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -91,10 +94,8 @@ init([]) ->
     timeout() | hibernate} |
   {stop, Reason :: term(), NewState :: #state{}}).
 writing(timeout,State)->
-  io:format("writing waiting timeout~!"),
   do_write(State);
 writing(_Event, State) ->
-  io:format("handle writing event~!"),
   do_write(State).
 
 %%--------------------------------------------------------------------
@@ -121,7 +122,6 @@ writing(_Event, State) ->
     NewState :: #state{}}).
 writing(_Event, _From, State) ->
   Reply = ok,
-  io:format("handle writing 3~!"),
   {reply, Reply, writing, State}.
 
 %%--------------------------------------------------------------------
@@ -140,7 +140,6 @@ writing(_Event, _From, State) ->
     timeout() | hibernate} |
   {stop, Reason :: term(), NewStateData :: #state{}}).
 handle_event(_Event, StateName, State) ->
-  io:format("handle handle_event 3~!"),
   {next_state, StateName, State}.
 
 %%--------------------------------------------------------------------
@@ -217,7 +216,20 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %%%===================================================================
 %%进行实际的写操作
 do_write(State)->
-  {ok,Msg} = game_db_queue:dequeue(),
+  case State#state.try_times>0 of
+    true->
+      %%说明上次的消息未写入成功，从中转区取消息
+      Result = redis:get(?CURR_WRITING_MSG),
+      case Result of
+        {ok,SzMsg} ->
+          Msg = db_utility:unpack_data(SzMsg);
+        _->
+          {ok,Msg} = game_db_queue:dequeue(),
+          ?LOG_ERROR("REDIS SYSTEM ERROR!!!Cannot load Msg from game_frame:mysql_writing_msg")
+      end;
+    _->
+      {ok,Msg} = game_db_queue:dequeue()
+  end,
   case Msg of
     %%队列已空
     undefined->
@@ -227,6 +239,8 @@ do_write(State)->
   end.
 
 do_write(Msg,State)->
+  %%先将取出来的消息存入中转区
+  redis:set(?CURR_WRITING_MSG,db_utility:pack_data(Msg)),
   IsPrepare = Msg#db_queue_msg.prepare,
   case IsPrepare of
     true->
@@ -243,7 +257,12 @@ do_write(Msg,State)->
   end,
   case Result of
     {ok,_}->
-      {next_state,writing,#state{}};
+      %%写入成功后标记数据过期时间
+      Redis_expir_time = game_config:lookup_keys([?CF_DB_QUEUE, <<"redis_expir_time">>]),
+      redis:expire(Msg#db_queue_msg.redis_key, integer_to_list(util:floor(3600 * Redis_expir_time))),
+      %%然后中转区标记为<<"successful">>，表示写成功
+      redis:set(?CURR_WRITING_MSG,<<"successful">>),
+      {next_state,writing,#state{},?ZERO_SPAN};
     _->
       RetryTimes = State#state.try_times,
       case RetryTimes>=?MAX_MYSQL_RETRY_TIME of
@@ -252,8 +271,18 @@ do_write(Msg,State)->
           %% 单独写一个log，方便查找log
           ?LOG_ERROR("Max MySQL retry times reached, Msg is: ~p",
             [[Msg]]),
-          {next_state,writing,#state{}};
+          {next_state,writing,#state{},?ZERO_SPAN};
         _->
-          {next_state,writing,#state{try_times=RetryTimes + 1}}
+          {next_state,writing,#state{try_times=RetryTimes + 1},?ZERO_SPAN}
       end
   end.
+
+test_db_write()->
+  Rand = util:rand(1,10000),
+  Sql = mysql:make_replace_sql(account,["id"],[Rand]),
+  State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,sql = Sql},
+  game_db_queue:enqueue(State).
+
+test_db_write(N)->
+  L = lists:seq(1,N),
+  [test_db_write() || X<-L].

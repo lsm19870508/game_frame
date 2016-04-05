@@ -10,6 +10,7 @@
 -author("Administrator").
 
 -behaviour(gen_server).
+-include("error_log.hrl").
 
 %% API
 -export([start_link/0,start_link/1]).
@@ -36,7 +37,7 @@
 lookup_keys(Keys) when is_list(Keys) ->
   case lookup_keys(Keys, null) of
     null ->
-      lager:error("config not found Keys:~p~n", [Keys]);
+      ?LOG_ERROR("config not found Keys:~p~n", [Keys]);
     Value ->
       Value
   end.
@@ -198,11 +199,11 @@ load_config_files(Path) ->
               Data = jsx:decode(Binary,[return_maps]),
               maps:put(Basename, Data, InMap);
             false ->
-              lager:error("config content error:" ++ Fullfile),
+              ?LOG_ERROR("config content error:" ++ Fullfile),
               throw({"config content error:" ++ Fullfile})
           end;
         _ ->
-          lager:error("config load error:" ++ Fullfile),
+          ?LOG_ERROR("config load error:" ++ Fullfile),
           throw({"config load error:" ++ Fullfile})
       end
     end, #{}, FileList),

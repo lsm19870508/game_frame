@@ -17,5 +17,9 @@ pack_data(Msg)->
   erlang:list_to_bitstring(io_lib:format("~w", [Msg])).
 
 %%数据包解包
+unpack_data({ok,Msg}) when is_binary(Msg)->
+  Msg1 = util:string_to_term(binary_to_list(Msg)),
+  {ok,Msg1};
+
 unpack_data(Msg)->
-  util:string_to_term(binary_to_list(Msg)).
+  Msg.
