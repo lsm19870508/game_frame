@@ -60,7 +60,7 @@ test_directly_select(N)->
   CurrTime = time_utility:longunixtime(),
   L = lists:seq(1,N),
   F = fun(X)->
-    Sql = <<"select * from account where id=1">>,
+    Sql = io_lib:format(<<"select * from account where id=~p">>,[X]),
     emysql:execute(default,Sql)
     end,
   [F(X) || X<-L],
@@ -72,7 +72,7 @@ test_prepare_select(N)->
   CurrTime = time_utility:longunixtime(),
   L = lists:seq(1,N),
   F = fun(X)->
-    emysql:execute(default,account_select,[1])
+    emysql:execute(default,account_select,[X])
       end,
   [F(X) || X<-L],
   EndTime = time_utility:longunixtime(),

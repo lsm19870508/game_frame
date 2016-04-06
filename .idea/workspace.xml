@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0663551b-c62e-4035-b6ed-a3c096ee76c4" name="Default" comment="add a db_writer">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/db_test.erl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/utility/list_utility.erl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/utility/time_utility.erl" />
+    <list default="true" id="0663551b-c62e-4035-b6ed-a3c096ee76c4" name="Default" comment="game_frame db test">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/cowboy" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/cowlib" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/emysql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/eredis" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/eredis_pool" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/goldrush" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/lager" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/poolboy" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/deps/ranch" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/cache_model.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/conversion_utility.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/crypto_model.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/db_test.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/db_utility.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_config.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_db_cache.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_db_queue.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_db_sup.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_db_writer.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_db_writer2.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_frame_app.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/game_frame_sup.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/lager_controller.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/list_utility.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/map_utility.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/math_utility.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/mod_rand.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/mysql.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/redis.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/root_http_handler.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/time_utility.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ebin/util.beam" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/db/game_db_writer2.erl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_match" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.rebar/erlcinfo" afterPath="$PROJECT_DIR$/.rebar/erlcinfo" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/server.config" afterPath="$PROJECT_DIR$/config/server.config" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ebin/game_frame.app" afterPath="$PROJECT_DIR$/ebin/game_frame.app" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/db/game_db_sup.erl" afterPath="$PROJECT_DIR$/src/db/game_db_sup.erl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/db/game_db_writer.erl" afterPath="$PROJECT_DIR$/src/db/game_db_writer.erl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/db/mysql.erl" afterPath="$PROJECT_DIR$/src/db/mysql.erl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lib/util.erl" afterPath="$PROJECT_DIR$/src/lib/util.erl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/utility/map_utility.erl" afterPath="$PROJECT_DIR$/src/utility/map_utility.erl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/db_test.erl" afterPath="$PROJECT_DIR$/src/test/db_test.erl" />
     </list>
     <ignored path="game_frame.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,61 +65,81 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="game_db_writer2.erl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/db/game_db_writer2.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.53571427">
+              <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="conversion_utility.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/utility/conversion_utility.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="56" column="9" selection-start-line="56" selection-start-column="9" selection-end-line="56" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="field.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/field.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="game_db_writer.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/db/game_db_writer.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="233" column="10" selection-start-line="233" selection-start-column="10" selection-end-line="233" selection-end-column="10" />
+              <caret line="110" column="4" selection-start-line="110" selection-start-column="4" selection-end-line="110" selection-end-column="4" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db_test.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mod_db.erl" pinned="false" current-in-tab="false">
+        <entry file="file://D:/篮球项目/服务器代码/src/mod/mod_db.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="game_db_queue.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/db/game_db_queue.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="db_test.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/db_test.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4856176">
-              <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="66" column="40" selection-start-line="66" selection-start-column="40" selection-end-line="66" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="emysql.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/deps/emysql/src/emysql.erl">
+      <file leaf-file-name="db_utility.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/utility/db_utility.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="101" column="20" selection-start-line="101" selection-start-column="12" selection-end-line="101" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mysql.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/db/mysql.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.0">
-              <caret line="50" column="19" selection-start-line="50" selection-start-column="19" selection-end-line="50" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hello.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/deps/emysql/hello.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.config" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/server.config">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+              <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -99,17 +149,7 @@
         <entry file="file://$PROJECT_DIR$/src/db/game_db_sup.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="79" column="51" selection-start-line="79" selection-start-column="51" selection-end-line="79" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="util.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lib/util.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.322034">
-              <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
+              <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -119,17 +159,7 @@
         <entry file="file://$PROJECT_DIR$/include/db_config.hrl">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="77" column="24" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list_utility.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utility/list_utility.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+              <caret line="82" column="34" selection-start-line="82" selection-start-column="34" selection-end-line="82" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -143,8 +173,8 @@
         <option value="Erlang Header" />
         <option value="Erlang Supervisor" />
         <option value="Erlang Gen Server" />
-        <option value="Erlang Gen FSM" />
         <option value="Erlang Module" />
+        <option value="Erlang Gen FSM" />
       </list>
     </option>
   </component>
@@ -167,7 +197,6 @@
         <option value="$PROJECT_DIR$/include/status_code.hrl" />
         <option value="$PROJECT_DIR$/src/root_http_handler.erl" />
         <option value="$PROJECT_DIR$/src/models/crypto_model.erl" />
-        <option value="$PROJECT_DIR$/src/db/game_db_sup.erl" />
         <option value="$PROJECT_DIR$/src/db/game_db_queue.erl" />
         <option value="$PROJECT_DIR$/src/models/cache_model.erl" />
         <option value="$PROJECT_DIR$/src/models/mod_rand.erl" />
@@ -181,9 +210,12 @@
         <option value="$PROJECT_DIR$/src/utility/list_utility.erl" />
         <option value="$PROJECT_DIR$/src/utility/time_utility.erl" />
         <option value="$PROJECT_DIR$/src/db/mysql.erl" />
-        <option value="$PROJECT_DIR$/src/db/game_db_writer.erl" />
         <option value="$PROJECT_DIR$/config/server.config" />
         <option value="$PROJECT_DIR$/src/test/db_test.erl" />
+        <option value="D:/QQ数据/240782361/FileRecv/help.erl" />
+        <option value="$PROJECT_DIR$/src/db/game_db_sup.erl" />
+        <option value="$PROJECT_DIR$/src/db/game_db_writer2.erl" />
+        <option value="$PROJECT_DIR$/src/db/game_db_writer.erl" />
       </list>
     </option>
   </component>
@@ -229,6 +261,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -449,9 +482,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -937,7 +969,8 @@
       <workItem from="1459390858666" duration="20125000" />
       <workItem from="1459474177777" duration="20716000" />
       <workItem from="1459578942382" duration="10894000" />
-      <workItem from="1459819558163" duration="25241000" />
+      <workItem from="1459819558163" duration="25334000" />
+      <workItem from="1459907239800" duration="18700000" />
     </task>
     <task id="LOCAL-00001" summary="add a db_writer">
       <created>1459819646107</created>
@@ -945,35 +978,41 @@
       <option name="project" value="LOCAL" />
       <updated>1459819646107</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="game_frame db test">
+      <created>1459857174264</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1459857174264</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="81619000" />
+    <option name="totallyTimeSpent" value="100412000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32900432" sideWeight="0.5042644" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26012793" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32900432" sideWeight="0.49573562" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -985,68 +1024,14 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add a db_writer" />
-    <option name="LAST_COMMIT_MESSAGE" value="add a db_writer" />
+    <MESSAGE value="game_frame db test" />
+    <option name="LAST_COMMIT_MESSAGE" value="game_frame db test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/include/db_config.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="73" column="1" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/util.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="232" column="35" selection-start-line="232" selection-start-column="35" selection-end-line="232" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game_config.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="198" column="46" selection-start-line="198" selection-start-column="46" selection-end-line="198" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/server.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="31" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game_frame.app.src">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game_frame_sup.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="57" selection-start-line="18" selection-start-column="57" selection-end-line="18" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game_frame_app.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utility/conversion_utility.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1166,13 +1151,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/field.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/root_http_handler.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1219,19 +1197,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utility/db_utility.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/deps/lager/src/lager.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="20" column="22" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1239,7 +1208,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="62" selection-start-line="10" selection-start-column="62" selection-end-line="10" selection-end-column="62" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1267,14 +1235,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/db/game_db_queue.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/db/redis.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1287,7 +1247,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1295,30 +1254,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utility/conversion_utility.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="9" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/db_config.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="77" column="24" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/db/game_db_sup.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="79" column="51" selection-start-line="79" selection-start-column="51" selection-end-line="79" selection-end-column="51" />
           <folding />
         </state>
       </provider>
@@ -1333,16 +1268,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/util.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.322034">
-          <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/deps/emysql/src/emysql.erl">
-      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="101" column="20" selection-start-line="101" selection-start-column="12" selection-end-line="101" selection-end-column="20" />
+          <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
           <folding />
         </state>
       </provider>
@@ -1365,8 +1292,120 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/db/mysql.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="50" column="19" selection-start-line="50" selection-start-column="19" selection-end-line="50" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/emysql/src/emysql_statements.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="67" selection-start-line="55" selection-start-column="67" selection-end-line="55" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/emysql/doc/emysql.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.678571">
+          <caret line="398" column="57" selection-start-line="398" selection-start-column="57" selection-end-line="398" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/emysql/src/emysql_conn.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="60" column="39" selection-start-line="60" selection-start-column="39" selection-end-line="60" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/emysql/src/emysql.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.8644068">
+          <caret line="753" column="52" selection-start-line="753" selection-start-column="52" selection-end-line="753" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/db_test.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="66" column="40" selection-start-line="66" selection-start-column="40" selection-end-line="66" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/db/game_db_queue.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/erl7.1/lib/tools-2.8.1/src/eprof.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26903552">
+          <caret line="122" column="0" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/QQ数据/240782361/FileRecv/help.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7072758">
+          <caret line="31" column="7" selection-start-line="31" selection-start-column="7" selection-end-line="31" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/db/game_db_sup.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/field.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utility/db_utility.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/db_config.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="82" column="34" selection-start-line="82" selection-start-column="34" selection-end-line="82" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utility/conversion_utility.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="56" column="9" selection-start-line="56" selection-start-column="9" selection-end-line="56" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/篮球项目/服务器代码/src/mod/mod_db.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -1374,15 +1413,15 @@
     <entry file="file://$PROJECT_DIR$/src/db/game_db_writer.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="233" column="10" selection-start-line="233" selection-start-column="10" selection-end-line="233" selection-end-column="10" />
+          <caret line="110" column="4" selection-start-line="110" selection-start-column="4" selection-end-line="110" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/db_test.erl">
+    <entry file="file://$PROJECT_DIR$/src/db/game_db_writer2.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4856176">
-          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.53571427">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -82,7 +82,7 @@ init([]) ->
   end,
 
   %%redis连接池，写入队列，缓存处理器(mysql=>redis)
-  {ok, {SupFlags, [RedisPoolWorker,?CHILD(game_db_queue,worker),?CHILD(game_db_cache,worker),?CHILD(game_db_writer,worker)]}}.
+  {ok, {SupFlags, [RedisPoolWorker,?CHILD(game_db_queue,worker),?CHILD(game_db_cache,worker),?CHILD(game_db_writer2,worker)]}}.
 
 %%%===================================================================
 %%% Internal functions
