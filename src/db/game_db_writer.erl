@@ -99,7 +99,7 @@ waiting(timeout, StateData) ->
 
 waiting({sql,Sql}, StateData) ->
   SqlBefore = StateData#sql_writer.sqlbuf,
-  LastEventTime = StateData#sql_writer.time,
+  LastWriteTime = StateData#sql_writer.time,
   CurrTime = util:unixtime(),
   if
     (is_list(Sql))->
@@ -114,11 +114,11 @@ waiting({sql,Sql}, StateData) ->
       {next_state, waiting, #sql_writer{time = CurrTime,sqlbuf=Sql2},?TIMEOUT_SPAN};
     true->
       if
-        (CurrTime - LastEventTime>?TIME_SPAN)->
+        (CurrTime - LastWriteTime>?TIME_SPAN)->
           do_write(FinalSql),
           {next_state, waiting, #sql_writer{time = CurrTime},?TIMEOUT_SPAN};
         true->
-          {next_state, waiting, #sql_writer{time = LastEventTime,sqlbuf=FinalSql},?TIMEOUT_SPAN}
+          {next_state, waiting, #sql_writer{time = LastWriteTime,sqlbuf=FinalSql},?TIMEOUT_SPAN}
       end
   end.
 
