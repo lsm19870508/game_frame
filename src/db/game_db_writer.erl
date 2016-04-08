@@ -13,6 +13,7 @@
 
 %% API
 -export([start_link/0]).
+-export([writeDelay/1]).
 
 %% gen_fsm callbacks
 -export([init/1,
@@ -26,7 +27,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(sql_writer, {time=0,sqlbuf= <<"">>,sql_num=0}).
+-record(sql_writer, {time=0,sqlbuf= <<"">>,sql_num=0,redis_key_list=[]}).
 -define(MAX_PACKET,4096).%%mysql5.6默认允许的最大的包上限
 -define(TIME_SPAN, 1).%%数据库写入间隔
 -define(TIMEOUT_SPAN, 1000).%%数据库写入间隔

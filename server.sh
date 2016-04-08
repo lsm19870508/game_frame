@@ -1,0 +1,1 @@
+erl -config config/server -pa deps/*/ebin -pa ebin +K true +P 1024000 -boot start_sasl -eval application:start(game_frame)
