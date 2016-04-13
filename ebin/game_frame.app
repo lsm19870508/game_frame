@@ -7,7 +7,7 @@
               {env,[]},
               {modules,[cache_model,conversion_utility,crypto_model,db_test,
                         db_utility,game_config,game_db_cache,game_db_queue,
-                        game_db_sup,game_db_writer,game_frame_app,
-                        game_frame_sup,lager_controller,list_utility,
-                        map_utility,math_utility,mod_rand,mysql,redis,
-                        root_http_handler,time_utility,util]}]}.
+                        game_db_sup,game_db_writer,game_db_writer2,
+                        game_frame_app,game_frame_sup,lager_controller,
+                        list_utility,map_utility,math_utility,mod_rand,mysql,
+                        redis,root_http_handler,time_utility,util]}]}.

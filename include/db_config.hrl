@@ -73,9 +73,14 @@
 
 -define(EXPIRE(Key,Time),["EXPIRE",Key,Time]).
 
-%%数据库写入队列，所用的临时表list
+%%数据库写入队列，所用的临时表list,除主库以外其他库用这个队列
 -define(MYSQL_WRITE_LIST,<<"game_frame:mysql_write_queue">>).
+%%数据库写入队列，所用的临时表list,允许批量写入的库用的队列
+-define(MYSQL_WRITE_LIST_MULT,<<"game_frame:mysql_write_queue_mult">>).
+%%非批量写入用的缓冲区
 -define(CURR_WRITING_MSG,<<"game_frame:mysql_writing_msg">>).
+%%批量写入用的缓冲区
+-define(CURR_WRITING_MSG_MULT,<<"game_frame:mysql_writing_msg_mult">>).
 -define(MAX_MYSQL_RETRY_TIME,5).
 
 %%数据库队列用的结构
@@ -88,3 +93,5 @@
             sql= <<"">> %%如果未预编译则填写语句
 }
 ).
+%%多少个消息一起写入，提升wrs/tps
+-define(MYSQL_MULTI_WRITE_NUM,100).

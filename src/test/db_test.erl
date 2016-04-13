@@ -8,10 +8,13 @@
 %%%-------------------------------------------------------------------
 -module(db_test).
 -author("Administrator").
+-include("db_config.hrl").
 
 %% API
 -export([test_db_multi_write/1,test_prepare_write/1,test_directly_write/1]).
 -export([test_directly_select/1,test_prepare_select/1]).
+-export([test_db_write/1,test_db_write_single/1]).
+-export([test_eprof_start/0,test_eprof_end/0]).
 
 test_db_multi_write(N)->
   CurrTime = time_utility:longunixtime(),
@@ -77,3 +80,51 @@ test_prepare_select(N)->
   [F(X) || X<-L],
   EndTime = time_utility:longunixtime(),
   io:format("Cost time is:~w~n",[{EndTime - CurrTime}]).
+
+test_db_write()->
+  Rand = util:rand(1,100000),
+  Sql = mysql:make_replace_sql(account,["id"],[Rand]),
+  SzSql = conversion_utility:to_binary(Sql),
+  State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,sql = SzSql},
+  %%State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,prepare = true,prepare_atom = account_replace,prepare_param = [Rand]},
+  game_db_queue:enqueue(State,?MYSQL_WRITE_LIST_MULT).
+
+test_db_write(N)->
+  test_eprof_start(),
+  CurrTime = time_utility:longunixtime(),
+  io:format("enqueue start time is:~w~n",[{CurrTime}]),
+  L = lists:seq(1,N),
+  [test_db_write() || X<-L],
+  CurrTime1 = time_utility:longunixtime(),
+  io:format("enqueue end time is:~w~n",[{CurrTime1}]),
+  test_eprof_end(),
+  ok.
+
+test_db_write_single()->
+  Rand = util:rand(1,100000),
+  Sql = mysql:make_replace_sql(account,["id"],[Rand]),
+  SzSql = conversion_utility:to_binary(Sql),
+  State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,sql = SzSql},
+  %%State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,prepare = true,prepare_atom = account_replace,prepare_param = [Rand]},
+  game_db_queue:enqueue(State,?MYSQL_WRITE_LIST).
+
+test_db_write_single(N)->
+  test_eprof_start(),
+  CurrTime = time_utility:longunixtime(),
+  io:format("enqueue start time is:~w~n",[{CurrTime}]),
+  L = lists:seq(1,N),
+  [test_db_write_single() || X<-L],
+  CurrTime1 = time_utility:longunixtime(),
+  io:format("enqueue end time is:~w~n",[{CurrTime1}]),
+  test_eprof_end(),
+  ok.
+
+test_eprof_start()->
+  eprof:start(),
+  eprof:start_profiling([self()]).
+
+test_eprof_end()->
+  eprof:stop_profiling(),
+  eprof:log(test_match),
+  eprof:analyze(),
+  eprof:stop().

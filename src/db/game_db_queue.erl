@@ -29,7 +29,7 @@
   terminate/2,
   code_change/3]).
 
--export([enqueue/1,dequeue/0,get_queue_len/0]).
+-export([enqueue/2,dequeue/1,dequeue/2,get_queue_len/1]).
 
 -define(SERVER, ?MODULE).
 
@@ -40,16 +40,20 @@
 %%%===================================================================
 
 %%入队操作
-enqueue(DbMsg) ->
-  gen_server:call(?MODULE, {enqueue,DbMsg}).
+enqueue(DbMsg,List) ->
+  gen_server:call(?MODULE, {enqueue,DbMsg,List}).
 
 %%出队操作
-dequeue()->
-  gen_server:call(?MODULE,{dequeue}).
+dequeue(List)->
+  gen_server:call(?MODULE,{dequeue,List}).
+
+%%出队操作N
+dequeue(N,List)->
+  gen_server:call(?MODULE,{dequeue,N,List}).
 
 %%获取队列长度
-get_queue_len()->
-  gen_server:call(?MODULE,{get_queue_len}).
+get_queue_len(List)->
+  gen_server:call(?MODULE,{get_queue_len,List}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -99,18 +103,35 @@ init([]) ->
   {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
   {stop, Reason :: term(), NewState :: #state{}}).
 
-handle_call({enqueue,DbMsg},_From,State)->
+handle_call({enqueue,DbMsg,List},_From,State)->
   SzDbMsg = db_utility:pack_data(DbMsg),
-  Result = redis:lpush(?MYSQL_WRITE_LIST,SzDbMsg),
+  Result = redis:lpush(List,SzDbMsg),
   {reply,Result,State};
 
-handle_call({dequeue},_From,State)->
-  SzDbMsg = redis:rpop(?MYSQL_WRITE_LIST),
+handle_call({dequeue,List},_From,State)->
+  SzDbMsg = redis:rpop(List),
   Result = db_utility:unpack_data(SzDbMsg),
   {reply,Result,State};
 
-handle_call({get_queue_len},_From,State)->
-  Result = redis:llen(?MYSQL_WRITE_LIST),
+handle_call({dequeue,N,List},_From,State) when is_integer(N)->
+  %%首先，根据取出来的第一条信息来决定接下来写入用的连接id
+  L = lists:seq(1,N),
+  F = fun(_,Res)->
+        SzDbMsg = redis:rpop(List),
+        {ok,Result} = db_utility:unpack_data(SzDbMsg),
+        case Result of
+          undefined->
+            Res;
+          _->
+            [Result | Res]
+        end
+      end,
+  %%这里结果是逆序，外层一定要逆序解码
+  Result = lists:foldl(F,[],L),
+  {reply,{ok,Result},State};
+
+handle_call({get_queue_len,List},_From,State)->
+  Result = redis:llen(List),
   {reply,Result,State};
 
 handle_call(_Request, _From, State) ->

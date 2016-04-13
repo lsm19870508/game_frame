@@ -18,8 +18,6 @@
 -export([start_link/0]).
 
 -export([write_sql/0]).
--export([test_db_write/1]).
--export([test_eprof_start/0,test_eprof_end/0]).
 
 %% gen_fsm callbacks
 -export([init/1,
@@ -43,6 +41,8 @@
 %%%===================================================================
 %%写一条sql语句
 write_sql()->
+  StartTime = time_utility:longunixtime(),
+  io:format("Start Writing Time is ~p!~n",[StartTime]),
   gen_fsm:send_event(?MODULE,{write_a_sql}).
 
 %%--------------------------------------------------------------------
@@ -76,7 +76,8 @@ start_link() ->
   {stop, Reason :: term()} | ignore).
 init([]) ->
   io:format("db_writer is ready!~n"),
-  {ok, writing, #state{},?ZERO_SPAN}.
+  %%{ok, writing, #state{},?ZERO_SPAN}.
+  {ok,writing,#state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -220,51 +221,62 @@ do_write(State)->
   case State#state.try_times>0 of
     true->
       %%说明上次的消息未写入成功，从中转区取消息
-      Result = redis:get(?CURR_WRITING_MSG),
+      Result = redis:get(?CURR_WRITING_MSG_MULT),
       case Result of
         {ok,SzMsg} ->
-          Msg = db_utility:unpack_data(SzMsg);
+          MsgList = db_utility:unpack_data(SzMsg);
         _->
-          {ok,Msg} = game_db_queue:dequeue(),
+          {ok,MsgList} = game_db_queue:dequeue(?MYSQL_MULTI_WRITE_NUM,?MYSQL_WRITE_LIST_MULT),
           ?LOG_ERROR("REDIS SYSTEM ERROR!!!Cannot load Msg from game_frame:mysql_writing_msg")
       end;
     _->
-      {ok,Msg} = game_db_queue:dequeue()
+      {ok,MsgList} = game_db_queue:dequeue(?MYSQL_MULTI_WRITE_NUM,?MYSQL_WRITE_LIST_MULT)
   end,
-  case Msg of
+  case MsgList of
     %%队列已空
-    undefined->
+    []->
       CurrTime = time_utility:longunixtime(),
       io:format("end writing test time is:~w~n",[{CurrTime}]),
       {next_state,writing,#state{},?TIMEOUT_SPAN};
     _->
-      do_write(Msg,State)
+      do_write(MsgList,State)
   end.
 
-do_write(Msg,State)->
+do_write(MsgList,State)->
   %%先将取出来的消息存入中转区
-  redis:set(?CURR_WRITING_MSG,db_utility:pack_data(Msg)),
-  IsPrepare = Msg#db_queue_msg.prepare,
-  case IsPrepare of
-    true->
-      %%如果预编译过
-      SqlId = Msg#db_queue_msg.prepare_atom,
-      SqlArgs = Msg#db_queue_msg.prepare_param,
-      PoolId = Msg#db_queue_msg.poolid,
-      Result = mysql:run_prepare(PoolId,SqlId,SqlArgs);
-    _->
-      %%如果没有
-      PoolId = Msg#db_queue_msg.poolid,
-      Sql = Msg#db_queue_msg.sql,
-      Result = mysql:execute(PoolId,Sql)
+  redis:set(?CURR_WRITING_MSG_MULT,db_utility:pack_data(MsgList)),
+  F = fun(X,{_,FinalSql})->
+        Sql = X#db_queue_msg.sql,
+        PoolId = X#db_queue_msg.poolid,
+        %%之所以逆序是因为取出来的时候逆序存放
+        {PoolId,<<Sql/binary,";",FinalSql/binary>>}
+      end,
+  {PoolId,Sql} = lists:foldr(F,{default,<<>>},MsgList),
+  Result = emysql:execute(PoolId,Sql),
+  Result1 = lists:zip(MsgList,Result),
+  F1 = fun({Msg,ETM}, Res) ->
+    case ETM of
+      {ok_packet,_,_,NID,_,_,_}->
+        Res;
+      {result_packet,_,_,RS,_} ->
+        Res;
+      {error_packet,_,_,_,DB_ERROR_MSG} ->
+        Res ++ [Msg]
+    end
   end,
-  case Result of
-    {ok,_}->
+  if
+    is_list(Result)->
+      LeftMsgList = lists:foldl(F1, [], Result1);
+  true->
+      LeftMsgList = lists:foldl(F1, [], [Result1])
+  end,
+  case LeftMsgList of
+    []->
       %%写入成功后标记数据过期时间
       Redis_expir_time = game_config:lookup_keys([?CF_DB_QUEUE, <<"redis_expir_time">>]),
-      redis:expire(Msg#db_queue_msg.redis_key, integer_to_list(util:floor(3600 * Redis_expir_time))),
+      [redis:expire(Msg#db_queue_msg.redis_key, integer_to_list(util:floor(3600 * Redis_expir_time))) || Msg<-MsgList],
       %%然后中转区标记为<<"successful">>，表示写成功
-      redis:set(?CURR_WRITING_MSG,<<"successful">>),
+      redis:set(?CURR_WRITING_MSG_MULT,<<"successful">>),
       {next_state,writing,#state{},?ZERO_SPAN};
     _->
       RetryTimes = State#state.try_times,
@@ -273,33 +285,10 @@ do_write(Msg,State)->
           %% 如果写代码次数超过上限
           %% 单独写一个log，方便查找log
           ?LOG_ERROR("Max MySQL retry times reached, Msg is: ~p",
-            [[Msg]]),
+            [[MsgList]]),
           {next_state,writing,#state{},?ZERO_SPAN};
         _->
+          redis:set(?CURR_WRITING_MSG_MULT,LeftMsgList),
           {next_state,writing,#state{try_times=RetryTimes + 1},?ZERO_SPAN}
       end
   end.
-
-test_db_write()->
-  Rand = util:rand(1,100000),
-  Sql = mysql:make_replace_sql(account,["id"],[Rand]),
-  State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,sql = Sql},
-  %%State = #db_queue_msg{redis_key = <<"TEST_HINCR">>,prepare = true,prepare_atom = account_replace,prepare_param = [Rand]},
-  game_db_queue:enqueue(State).
-
-test_db_write(N)->
-  L = lists:seq(1,N),
-  [test_db_write() || X<-L],
-  CurrTime = time_utility:longunixtime(),
-  io:format("start writing test time is:~w~n",[{CurrTime}]),
-  ok.
-
-test_eprof_start()->
-  eprof:start(),
-  eprof:start_profiling([self()]).
-
-test_eprof_end()->
-  eprof:stop_profiling(),
-  eprof:log(test_match),
-  eprof:analyze(),
-  eprof:stop().

@@ -1,24 +1,28 @@
 %%%-------------------------------------------------------------------
-%%% @author Administrator
-%%% @copyright (C) 2016, <COMPANY>
+%%% @author 李世铭
+%%% @copyright (C) April 1st,2016, <COMPANY>
 %%% @doc
-%%%
+%%% 负责redis->mysql同步的写线程
 %%% @end
-%%% Created : 06. 四月 2016 15:45
+%%% Created : 01. 四月 2016 15:02
 %%%-------------------------------------------------------------------
 -module(game_db_writer).
 -author("Administrator").
 
 -behaviour(gen_fsm).
+-include("db_config.hrl").
+-include("error_log.hrl").
+-include("config_keys.hrl").
 
 %% API
 -export([start_link/0]).
--export([writeDelay/1]).
+
+-export([write_sql/0]).
 
 %% gen_fsm callbacks
 -export([init/1,
-  waiting/2,
-  waiting/3,
+  writing/2,
+  writing/3,
   handle_event/3,
   handle_sync_event/4,
   handle_info/3,
@@ -26,15 +30,20 @@
   code_change/4]).
 
 -define(SERVER, ?MODULE).
-
--record(sql_writer, {time=0,sqlbuf= <<"">>,sql_num=0,redis_key_list=[]}).
 -define(MAX_PACKET,4096).%%mysql5.6默认允许的最大的包上限
--define(TIME_SPAN, 1).%%数据库写入间隔
--define(TIMEOUT_SPAN, 1000).%%数据库写入间隔
+-define(TIMEOUT_SPAN, 1000).%%休眠间隔
+-define(ZERO_SPAN,0).%%立即执行
+
+-record(state, {try_times=0}).%%重试次数
 
 %%%===================================================================
 %%% API
 %%%===================================================================
+%%写一条sql语句
+write_sql()->
+  StartTime = time_utility:longunixtime(),
+  io:format("Start Writing Time is ~p!~n",[StartTime]),
+  gen_fsm:send_event(?MODULE,{write_a_sql}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -62,15 +71,13 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 -spec(init(Args :: term()) ->
-  {ok, StateName :: atom(), StateData :: #sql_writer{}} |
-  {ok, StateName :: atom(), StateData :: #sql_writer{}, timeout() | hibernate} |
+  {ok, StateName :: atom(), StateData :: #state{}} |
+  {ok, StateName :: atom(), StateData :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
 init([]) ->
-  {ok, waiting, #sql_writer{}}.
-
-writeDelay(Sql)->
-  gen_fsm:send_event(?MODULE, {sql,Sql}),
-  true.
+  io:format("db_writer is ready!~n"),
+  %%{ok, writing, #state{},?ZERO_SPAN}.
+  {ok,writing,#state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -83,45 +90,15 @@ writeDelay(Sql)->
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec(waiting(Event :: term(), State :: #sql_writer{}) ->
-  {next_state, NextStateName :: atom(), NextState :: #sql_writer{}} |
-  {next_state, NextStateName :: atom(), NextState :: #sql_writer{},
+-spec(writing(Event :: term(), State :: #state{}) ->
+  {next_state, NextStateName :: atom(), NextState :: #state{}} |
+  {next_state, NextStateName :: atom(), NextState :: #state{},
     timeout() | hibernate} |
-  {stop, Reason :: term(), NewState :: #sql_writer{}}).
-%% ====================================================================
-% @todo implement actual state
-waiting(timeout, StateData) ->
-  SqlBefore = StateData#sql_writer.sqlbuf,
-  CurrTime = util:unixtime(),
-  do_write(SqlBefore),
-%% 	?DEBUG("mod_db timeout:~p~n",[{CurrTime}]),
-%% 	?DEBUG("mod_db timeout sql is:~s~n",[SqlBefore]),
-  {next_state, waiting, #sql_writer{time = CurrTime},?TIMEOUT_SPAN};
-
-waiting({sql,Sql}, StateData) ->
-  SqlBefore = StateData#sql_writer.sqlbuf,
-  LastWriteTime = StateData#sql_writer.time,
-  CurrTime = util:unixtime(),
-  if
-    (is_list(Sql))->
-      Sql2 = list_to_binary(Sql);
-    true->
-      Sql2 = Sql
-  end,
-  FinalSql = util:trueab(byte_size(SqlBefore)==0,<<Sql2/binary>>,<<SqlBefore/binary,";",Sql2/binary>>),
-  if
-    (byte_size(FinalSql) > ?MAX_PACKET)->
-      do_write(SqlBefore),
-      {next_state, waiting, #sql_writer{time = CurrTime,sqlbuf=Sql2},?TIMEOUT_SPAN};
-    true->
-      if
-        (CurrTime - LastWriteTime>?TIME_SPAN)->
-          do_write(FinalSql),
-          {next_state, waiting, #sql_writer{time = CurrTime},?TIMEOUT_SPAN};
-        true->
-          {next_state, waiting, #sql_writer{time = LastWriteTime,sqlbuf=FinalSql},?TIMEOUT_SPAN}
-      end
-  end.
+  {stop, Reason :: term(), NewState :: #state{}}).
+writing(timeout,State)->
+  do_write(State);
+writing(_Event, State) ->
+  do_write(State).
 
 %%--------------------------------------------------------------------
 %% @private
@@ -134,20 +111,20 @@ waiting({sql,Sql}, StateData) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec(waiting(Event :: term(), From :: {pid(), term()},
-    State :: #sql_writer{}) ->
-  {next_state, NextStateName :: atom(), NextState :: #sql_writer{}} |
-  {next_state, NextStateName :: atom(), NextState :: #sql_writer{},
+-spec(writing(Event :: term(), From :: {pid(), term()},
+    State :: #state{}) ->
+  {next_state, NextStateName :: atom(), NextState :: #state{}} |
+  {next_state, NextStateName :: atom(), NextState :: #state{},
     timeout() | hibernate} |
-  {reply, Reply, NextStateName :: atom(), NextState :: #sql_writer{}} |
-  {reply, Reply, NextStateName :: atom(), NextState :: #sql_writer{},
+  {reply, Reply, NextStateName :: atom(), NextState :: #state{}} |
+  {reply, Reply, NextStateName :: atom(), NextState :: #state{},
     timeout() | hibernate} |
-  {stop, Reason :: normal | term(), NewState :: #sql_writer{}} |
+  {stop, Reason :: normal | term(), NewState :: #state{}} |
   {stop, Reason :: normal | term(), Reply :: term(),
-    NewState :: #sql_writer{}}).
-waiting(_Event, _From, State) ->
+    NewState :: #state{}}).
+writing(_Event, _From, State) ->
   Reply = ok,
-  {reply, Reply, state_name, State}.
+  {reply, Reply, writing, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -159,11 +136,11 @@ waiting(_Event, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec(handle_event(Event :: term(), StateName :: atom(),
-    StateData :: #sql_writer{}) ->
-  {next_state, NextStateName :: atom(), NewStateData :: #sql_writer{}} |
-  {next_state, NextStateName :: atom(), NewStateData :: #sql_writer{},
+    StateData :: #state{}) ->
+  {next_state, NextStateName :: atom(), NewStateData :: #state{}} |
+  {next_state, NextStateName :: atom(), NewStateData :: #state{},
     timeout() | hibernate} |
-  {stop, Reason :: term(), NewStateData :: #sql_writer{}}).
+  {stop, Reason :: term(), NewStateData :: #state{}}).
 handle_event(_Event, StateName, State) ->
   {next_state, StateName, State}.
 
@@ -231,11 +208,75 @@ terminate(_Reason, _StateName, _State) ->
 %% @end
 %%--------------------------------------------------------------------
 -spec(code_change(OldVsn :: term() | {down, term()}, StateName :: atom(),
-    StateData :: #sql_writer{}, Extra :: term()) ->
-  {ok, NextStateName :: atom(), NewStateData :: #sql_writer{}}).
+    StateData :: #state{}, Extra :: term()) ->
+  {ok, NextStateName :: atom(), NewStateData :: #state{}}).
 code_change(_OldVsn, StateName, State, _Extra) ->
   {ok, StateName, State}.
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+%%进行实际的写操作
+do_write(State)->
+  case State#state.try_times>0 of
+    true->
+      %%说明上次的消息未写入成功，从中转区取消息
+      Result = redis:get(?CURR_WRITING_MSG),
+      case Result of
+        {ok,SzMsg} ->
+          Msg = db_utility:unpack_data(SzMsg);
+        _->
+          {ok,Msg} = game_db_queue:dequeue(?MYSQL_WRITE_LIST),
+          ?LOG_ERROR("REDIS SYSTEM ERROR!!!Cannot load Msg from game_frame:mysql_writing_msg")
+      end;
+    _->
+      {ok,Msg} = game_db_queue:dequeue(?MYSQL_WRITE_LIST)
+  end,
+  case Msg of
+    %%队列已空
+    undefined->
+      CurrTime = time_utility:longunixtime(),
+      io:format("end writing test time is:~w~n",[{CurrTime}]),
+      {next_state,writing,#state{},?TIMEOUT_SPAN};
+    _->
+      do_write(Msg,State)
+  end.
+
+do_write(Msg,State)->
+  %%先将取出来的消息存入中转区
+  redis:set(?CURR_WRITING_MSG,db_utility:pack_data(Msg)),
+  IsPrepare = Msg#db_queue_msg.prepare,
+  case IsPrepare of
+    true->
+      %%如果预编译过
+      SqlId = Msg#db_queue_msg.prepare_atom,
+      SqlArgs = Msg#db_queue_msg.prepare_param,
+      PoolId = Msg#db_queue_msg.poolid,
+      Result = mysql:run_prepare(PoolId,SqlId,SqlArgs);
+    _->
+      %%如果没有
+      PoolId = Msg#db_queue_msg.poolid,
+      Sql = Msg#db_queue_msg.sql,
+      Result = mysql:execute(PoolId,Sql)
+  end,
+  case Result of
+    {ok,_}->
+      %%写入成功后标记数据过期时间
+      Redis_expir_time = game_config:lookup_keys([?CF_DB_QUEUE, <<"redis_expir_time">>]),
+      redis:expire(Msg#db_queue_msg.redis_key, integer_to_list(util:floor(3600 * Redis_expir_time))),
+      %%然后中转区标记为<<"successful">>，表示写成功
+      redis:set(?CURR_WRITING_MSG,<<"successful">>),
+      {next_state,writing,#state{},?ZERO_SPAN};
+    _->
+      RetryTimes = State#state.try_times,
+      case RetryTimes>=?MAX_MYSQL_RETRY_TIME of
+        true->
+          %% 如果写代码次数超过上限
+          %% 单独写一个log，方便查找log
+          ?LOG_ERROR("Max MySQL retry times reached, Msg is: ~p",
+            [[Msg]]),
+          {next_state,writing,#state{},?ZERO_SPAN};
+        _->
+          {next_state,writing,#state{try_times=RetryTimes + 1},?ZERO_SPAN}
+      end
+  end.
