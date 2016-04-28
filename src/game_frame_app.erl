@@ -61,7 +61,7 @@ error_hook(Code, Headers, <<>>, Req) when is_integer(Code), Code >= 400 ->
     Path = cowboy_req:path(Req),
     Body = ["HTTP Error ", integer_to_list(Code), $\n],
 
-    monitor_collector:incr(Path, {error, {conversion_utility:to_binary(Code), <<"ERROR">>}}),
+    %%monitor_collector:incr(Path, {error, {conversion_utility:to_binary(Code), <<"ERROR">>}}),
 
     Headers2 = lists:keyreplace(<<"content-length">>, 1, Headers,
         {<<"content-length">>, integer_to_list(iolist_size(Body))}),
