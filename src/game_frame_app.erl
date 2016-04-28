@@ -48,7 +48,7 @@ stop(_State) ->
 
 error_hook(404, Headers, <<>>, Req) ->
     Path = cowboy_req:path(Req),
-    monitor_collector:incr(Path, {error, {<<"404">>, <<"Not found">>}}),
+    %%monitor_collector:incr(Path, {error, {<<"404">>, <<"Not found">>}}),
     Body = ["404 Not Found: \"", Path,
         "\" is not the path you are looking for.\n"],
     Headers2 = lists:keyreplace(<<"content-length">>, 1, Headers,
@@ -57,6 +57,7 @@ error_hook(404, Headers, <<>>, Req) ->
         [404, cowboy_req:get(peer, Req), cowboy_req:path(Req), cowboy_req:qs(Req), cowboy_req:headers(Req), cowboy_req:has_body(Req)]),
     cowboy_req:reply(404, Headers2, Body, Req);
 error_hook(Code, Headers, <<>>, Req) when is_integer(Code), Code >= 400 ->
+    io:format("error_hook is ~p~n",[{Code,Req}]),
     Path = cowboy_req:path(Req),
     Body = ["HTTP Error ", integer_to_list(Code), $\n],
 

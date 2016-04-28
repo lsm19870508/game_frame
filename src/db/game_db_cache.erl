@@ -51,18 +51,22 @@ reload(TableName)  when is_binary(TableName)->
 
 %%根据传入的原子来读取对应的cache
 load_cache()->
-  load_cache(all).
+  load_cache(all),
+  io:format("all redis cache has been loaded from mysql!~n").
 
 load_cache(CacheAtom) when is_atom(CacheAtom)->
   case CacheAtom of
     all->
       %%读取计算所有的缓存
-      cache_model:init_sciense_cache(),
-      cache_model:init_user_cache();
+      lib_cache:init_sciense_cache(),
+      lib_cache:init_user_cache(),
+      lib_cache:init_account_cache();
     science->
-      cache_model:init_sciense_cache();
+      lib_cache:init_sciense_cache();
     user->
-      cache_model:init_user_cache();
+      lib_cache:init_user_cache();
+    account->
+      lib_cache:init_account_cache();
     _->
       ok
   end.

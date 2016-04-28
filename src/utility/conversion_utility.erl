@@ -1,6 +1,8 @@
 -module(conversion_utility).
 
--export([to_binary/1, to_list/1, list_to_hex/1, to_integer/1, binary_to_lower/1, urlencode/1, term_to_string/1, string_to_term/1]).
+-export([to_binary/1, to_list/1, list_to_hex/1, to_integer/1,
+  binary_to_lower/1, urlencode/1, term_to_string/1, string_to_term/1,
+  convert_list_to_kvlist/1,convert_list_to_map/1]).
 
 %% Convert everything to binary(just enough version right now)
 to_binary(Atom) when is_atom(Atom) ->
@@ -78,4 +80,28 @@ binary_to_lower(Key) ->
   KeyStr = conversion_utility:to_list(Key),
   LowerStr = string:to_lower(KeyStr),
   conversion_utility:to_binary(LowerStr).
+
+%%将list  [k1,v1,k2,v2...]转换成kvlist [{k1,v1},{k2,v2},....]
+-spec(convert_list_to_kvlist(List::list()) -> list()).
+convert_list_to_kvlist(List) when is_list(List)->
+  F = fun(X,{IsPass,Key,Result})->
+    if
+      not(IsPass)-> {true,X,Result};
+      true -> {false,{},[{Key,X}] ++ Result}
+    end
+      end,
+  {_,_,Return} = lists:foldl(F,{false,{},[]},List),
+  Return.
+
+%%将list  [k1,v1,k2,v2...]转换成map {k1=>v1,key2=>v2...}
+-spec(convert_list_to_map(List::list()) -> map()).
+convert_list_to_map(List) when is_list(List)->
+  F = fun(X,{IsPass,Key,Result})->
+    if
+      not(IsPass)-> {true,X,Result};
+      true -> {false,{},Result#{Key=>X}}
+    end
+      end,
+  {_,_,Return} = lists:foldl(F,{false,{},#{}},List),
+  Return.
 

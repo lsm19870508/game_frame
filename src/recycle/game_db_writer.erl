@@ -76,8 +76,8 @@ start_link() ->
   {stop, Reason :: term()} | ignore).
 init([]) ->
   io:format("db_writer is ready!~n"),
-  %%{ok, writing, #state{},?ZERO_SPAN}.
-  {ok,writing,#state{}}.
+  {ok, writing, #state{},?ZERO_SPAN}.
+  %%{ok,writing,#state{}}.
 
 %%--------------------------------------------------------------------
 %% @private

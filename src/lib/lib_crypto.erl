@@ -1,4 +1,4 @@
--module(crypto_model).
+-module(lib_crypto).
 
 -include("config_keys.hrl").
 
@@ -49,10 +49,10 @@ decrypt(Req, Body) ->
 
 %% 解密
 decrypt(KIndex, IIndex, Body) ->
-  case baba3_config:lookup_keys([?CF_APP, <<"crypto">>]) of
+  case game_config:lookup_keys([?CF_APP, <<"crypto">>]) of
     true ->
       {ok, Key, Ivec} = get_key_ivec(KIndex, IIndex),
-      Body2 = crypto_utility:aes_cbc128_decrypt(Key, Ivec, Body),
+      Body2 = lib_crypto:aes_cbc128_decrypt(Key, Ivec, Body),
       {ok, Body2};
     false ->
       {ok, Body}
@@ -60,18 +60,18 @@ decrypt(KIndex, IIndex, Body) ->
 
 %% 加密
 encrypt(Body) ->
-  KIndex = random_utility:random(64) - 1,
-  IIndex = random_utility:random(64) - 1,
+  KIndex = util:rand(1,64) - 1,
+  IIndex = util:rand(1,64) - 1,
   Head = {<<"CONTENT-VKEY">>, integer_to_list(KIndex) ++ "," ++ integer_to_list(IIndex)},
   {ok, Body2} = encrypt(KIndex, IIndex, Body),
   {ok, Body2, Head}.
 
 %% 加密
 encrypt(KIndex, IIndex, Body) ->
-  case baba3_config:lookup_keys([?CF_APP, <<"crypto">>]) of
+  case game_config:lookup_keys([?CF_APP, <<"crypto">>]) of
     true ->
       {ok, Key, Ivec} = get_key_ivec(KIndex, IIndex),
-      Body2 = crypto_utility:aes_cbc128_encrypt(Key, Ivec, Body),
+      Body2 = lib_crypto:aes_cbc128_encrypt(Key, Ivec, Body),
       {ok, Body2};
     false ->
       {ok, Body}

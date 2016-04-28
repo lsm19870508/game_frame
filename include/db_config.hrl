@@ -93,5 +93,6 @@
             sql= <<"">> %%如果未预编译则填写语句
 }
 ).
+
 %%多少个消息一起写入，提升wrs/tps
 -define(MYSQL_MULTI_WRITE_NUM,100).

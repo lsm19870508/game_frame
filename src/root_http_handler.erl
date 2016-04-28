@@ -26,7 +26,6 @@ process_request(<<"POST">>, false, Req) ->
 process_request(<<"POST">>, true, Req) ->
   process_post(Req);
 process_request(<<"GET">>, _, Req) ->
-  io:format("recv get request:~w~n",[Req]),
   process_get(Req);
 process_request(_, _, Req) ->
   respond_invalid_request(Req).
@@ -37,10 +36,11 @@ process_get(Req) ->
 
 %% HTTP Body Fetching, right now the limit is 1MB(defined in cowboy)
 process_post(Req) ->
+  Test = cowboy_req:body(Req),
   case cowboy_req:body(Req) of
     {ok, Body, Req2} ->
       % 解密
-      case catch crypto_model:decrypt(Req, Body) of
+      case catch lib_crypto:decrypt(Req, Body) of
         {error, _Reason} ->
           respond_invalid_request(Req);
         {ok, Body2} ->
@@ -76,7 +76,7 @@ process_data(_Data, Req) ->
 respond_json(Code, Json, Req) ->
   Body = jsx:encode(Json),
   % 加密
-  {ok, Body2, Head} = crypto_model:encrypt(Body),
+  {ok, Body2, Head} = lib_crypto:encrypt(Body),
   cowboy_req:reply(Code,[Head, {<<"Content-Type">>, <<"application/json; charset=utf-8">>}], Body2, Req).
 
 respond_invalid_request(Req) ->

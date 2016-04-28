@@ -29,6 +29,7 @@
 -export([get_heap/0,get_heap/1]).
 -export([get_processes/0]).
 -export([rand/2]).
+-export([hotload/1]).
 
 %%将pid转换为binary
 -spec(pid_to_binary(Pid::pid()) -> binary()).
@@ -323,3 +324,8 @@ rand(Min, Max) ->
   %% random:seed(erlang:now()),
   M = Min - 1,
   random:uniform(Max - M) + M.
+
+%%热更新用
+hotload(Module)->
+  {M,B,F} = code:get_object_code(Module),
+  code:load_binary(M, F, B).
