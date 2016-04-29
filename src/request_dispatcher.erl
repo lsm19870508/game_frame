@@ -2,6 +2,7 @@
 
 -export([dispatch/1]).
 -export([routing_fail/1]).
+-export([dispatch_with_data/3]).
 
 -include("status_code.hrl").
 -include("field.hrl").
@@ -98,7 +99,13 @@ dispatch_with_data_step_2(Code, Common, Data, UserData, RetryCount) ->
 
 %%账号信息走这里
 dispatch_with_data(Code, Common, Data) when (Code div 1000 == 60)->
-  pp_account:handle(Code,Common,Data);
+  case pp_account:handle(Code,Common,Data) of
+    {ok, Result} ->
+      respond_with_response(?STATUS_OK, Result, Code);
+    {error, Status} ->
+      ?LOG_ERROR("code:~p, common:~p, data:~p, status:~p", [Code, Common, Data, Status]),
+      respond_with_response(Status, #{}, Code)
+  end;
 
 %%其他信息走这里
 dispatch_with_data(Code, Common, Data)->
