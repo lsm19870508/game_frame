@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(lib_cache).
 -include("db_table_define.hrl").
+-include("db_config.hrl").
 -author("Lsm").
 
 %% API
@@ -28,14 +29,18 @@ get_sciense_cache(Type,Level)->
 init_account_cache()->
   Sql = "select * from account",
   List = mysql:get_all(Sql),
+  StartTime = time_utility:unixtime(),
+  io:format("start time is:~p~n",[{StartTime}]),
   F = fun([Id,AccountName,Password,IsRegister,Secret,SecretAnswer,Phoneno,SecretTime],MaxAccountId)->
         RedisNameKey = <<?REDIS_TB_ACCOUNTNAME_ACCOUNT/binary,":",AccountName/binary>>,
         SzId = util:to_binary(Id),
         RedisIdKey = <<?REDIS_TB_ACCOUNT/binary,":",SzId/binary>>,
         Values = ["id",Id,"accountname",AccountName,"password",Password,"is_register",IsRegister,
           "secret",Secret,"secret_answer",SecretAnswer,"phoneno",Phoneno,"secrettime",SecretTime],
-        redis:hmset(RedisNameKey,Values),
-        redis:hmset(RedisIdKey,Values),
+        %%redis:hmset(RedisNameKey,Values),
+        %%redis:hmset(RedisIdKey,Values),
+        PipeLine = [?HMSET(RedisNameKey,Values),?HMSET(RedisIdKey,Values)],
+        redis:redis_qp(?REDIS_DEFAULT_POOL,PipeLine,5000),
         case (Id>MaxAccountId) of
           true->
             Id;
@@ -44,4 +49,6 @@ init_account_cache()->
         end
     end,
   MaxAccountId = lists:foldl(F,0,List),
+  EndTime = time_utility:unixtime(),
+  io:format("end time is:~p~n",[{EndTime}]),
   redis:set(?REDIS_TB_ACCOUNT_INCR,MaxAccountId).
