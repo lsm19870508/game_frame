@@ -236,8 +236,4 @@ redis_q(PoolName,QueryList,TimeOut)->
 -spec redis_qp(PoolName::atom(), Pipeline::[iolist()], TimeOut::integer()) ->
   {ok, binary()} | {error, Reason::binary()}.
 redis_qp(PoolName,Pipeline,TimeOut)->
-  case eredis_pool:qp(PoolName, Pipeline, TimeOut) of
-    {ok, Value} -> {ok, Value};
-    %%日后加入log
-    {error,_}=E -> E
-  end.
+  eredis_pool:qp(PoolName, Pipeline, TimeOut).
