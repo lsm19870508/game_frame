@@ -40,7 +40,7 @@ init_account_cache()->
         %%redis:hmset(RedisNameKey,Values),
         %%redis:hmset(RedisIdKey,Values),
         PipeLine = [?HMSET(RedisNameKey,Values),?HMSET(RedisIdKey,Values)],
-        redis:redis_qp(?REDIS_DEFAULT_POOL,PipeLine,5000),
+        %%redis:redis_qp(?REDIS_DEFAULT_POOL,PipeLine,5000),
         case (Id>MaxAccountId) of
           true->
             Id;
