@@ -31,6 +31,8 @@ init_account_cache()->
   List = mysql:get_all(Sql),
   StartTime = time_utility:unixtime(),
   io:format("start time is:~p~n",[{StartTime}]),
+  %%开启批量写入
+  redis:redis_multi_begin(),
   F = fun([Id,AccountName,Password,IsRegister,Secret,SecretAnswer,Phoneno,SecretTime],MaxAccountId)->
         RedisNameKey = <<?REDIS_TB_ACCOUNTNAME_ACCOUNT/binary,":",AccountName/binary>>,
         SzId = util:to_binary(Id),
@@ -39,7 +41,8 @@ init_account_cache()->
           "secret",Secret,"secret_answer",SecretAnswer,"phoneno",Phoneno,"secrettime",SecretTime],
         %%redis:hmset(RedisNameKey,Values),
         %%redis:hmset(RedisIdKey,Values),
-        PipeLine = [?HMSET(RedisNameKey,Values),?HMSET(RedisIdKey,Values)],
+        redis:redis_multi(?HMSET(RedisNameKey,Values)),
+        redis:redis_multi(?HMSET(RedisIdKey,Values)),
         %%redis:redis_qp(?REDIS_DEFAULT_POOL,PipeLine,5000),
         case (Id>MaxAccountId) of
           true->
@@ -49,6 +52,8 @@ init_account_cache()->
         end
     end,
   MaxAccountId = lists:foldl(F,0,List),
+  %%结束批量写入
+  redis:redis_multi_end(),
   EndTime = time_utility:unixtime(),
   io:format("end time is:~p~n",[{EndTime}]),
   redis:set(?REDIS_TB_ACCOUNT_INCR,MaxAccountId).

@@ -11,6 +11,8 @@
 %%redis define
 -define(REDIS_TIMEOUT, 5000).
 
+-define(REDIS_MULTI_TIMEOUT,600000).
+
 -define(REDIS_POOL_TIMEOUT, 5000).
 
 -define(REDIS_DEFAULT_POOL,{global,dbsrv}).
@@ -96,3 +98,6 @@
 
 %%多少个消息一起写入，提升wrs/tps
 -define(MYSQL_MULTI_WRITE_NUM,100).
+
+%%redis多少个消息一起写入
+-define(REDIS_MULTI_WRITE_NUM,200).

@@ -35,6 +35,7 @@
 -export([zrange/3,zrange/4]).
 -export([persist/1,persist/2]).
 -export([expire/2,expire/3]).
+-export([redis_multi_begin/0,redis_multi/1,redis_multi_end/0]).
 
 %%persist
 %%http://www.yiibai.com/redis/keys_persist.html
@@ -237,3 +238,22 @@ redis_q(PoolName,QueryList,TimeOut)->
   {ok, binary()} | {error, Reason::binary()}.
 redis_qp(PoolName,Pipeline,TimeOut)->
   eredis_pool:qp(PoolName, Pipeline, TimeOut).
+
+%%redis批量写入模式结束，写入进程字典中剩余的语句
+redis_multi_end()->
+  Pipeline = erlang:get(pipeline),
+  redis_qp(?REDIS_DEFAULT_POOL,Pipeline,?REDIS_TIMEOUT).
+
+%%redis批量写入模式进行中，必须先进行begin
+redis_multi(Query)->
+  PipeLine = erlang:get(pipeline),
+  PipeLine1 = [Query | PipeLine],
+  CurrNum = length(PipeLine1),
+  if
+    CurrNum>?REDIS_MULTI_WRITE_NUM -> put(pipeline,[]),redis_qp(?REDIS_DEFAULT_POOL,PipeLine1,?REDIS_MULTI_TIMEOUT);
+    true -> put(pipeline,PipeLine1)
+  end.
+
+%%redis批量写入模式开启，这三个函数必须一起用
+redis_multi_begin()->
+  put(pipeline,[]).
