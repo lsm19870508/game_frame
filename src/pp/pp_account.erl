@@ -33,7 +33,29 @@ handle(60001,Common,Data)->
 
 %%登录
 handle(60002,Common,Data)->
-  ok;
+  AccountName = maps:get(<<"accountname">>,Data),
+  Password = maps:get(<<"password">>,Data),
+  {CanLogin,AccountId,UnixTime,Token} = lib_account:do_login(AccountName,Password),
+  case CanLogin of
+    0->
+      {ok,#{"accountid"=>AccountId,"unixtime"=>UnixTime,"token"=>Token}};
+    _->
+      ErrorCode = ?MAKE_ERROR_CODE(60002,CanLogin),
+      {error,ErrorCode}
+  end;
+
+%%快速登录
+handle(60003,Common,Data)->
+  Imei = maps:get(<<"imei">>,Data),
+  {CanLogin,AccountId,UnixTime,Token} = lib_account:do_fast_login(Imei),
+  case CanLogin of
+    0->
+      {ok,#{"accountid"=>AccountId,"unixtime"=>UnixTime,"token"=>Token}};
+    _->
+      ErrorCode = ?MAKE_ERROR_CODE(60002,CanLogin),
+      {error,ErrorCode}
+  end;
+
 
 handle(_Code,_Common,_Data)->
   request_dispatcher:routing_fail(_Code).
