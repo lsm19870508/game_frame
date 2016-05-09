@@ -24,7 +24,7 @@ handle(60001,Common,Data)->
   {CanLogin,AccountId,UnixTime,Token} = lib_account:do_register(AccountName,Password),
   case CanLogin of
     0->
-      {ok,#{"accountid"=>AccountId,"unixtime"=>UnixTime,"token"=>Token}};
+      {ok,#{<<"accountid">>=>AccountId,<<"unixtime">>=>UnixTime,<<"token">>=>Token}};
     _->
       ErrorCode = ?MAKE_ERROR_CODE(60001,CanLogin),
       {error,ErrorCode}
@@ -38,7 +38,7 @@ handle(60002,Common,Data)->
   {CanLogin,AccountId,UnixTime,Token} = lib_account:do_login(AccountName,Password),
   case CanLogin of
     0->
-      {ok,#{"accountid"=>AccountId,"unixtime"=>UnixTime,"token"=>Token}};
+      {ok,#{<<"accountid">>=>AccountId,<<"unixtime">>=>UnixTime,<<"token">>=>Token}};
     _->
       ErrorCode = ?MAKE_ERROR_CODE(60002,CanLogin),
       {error,ErrorCode}
@@ -50,12 +50,25 @@ handle(60003,Common,Data)->
   {CanLogin,AccountId,UnixTime,Token} = lib_account:do_fast_login(Imei),
   case CanLogin of
     0->
-      {ok,#{"accountid"=>AccountId,"unixtime"=>UnixTime,"token"=>Token}};
+      {ok,#{<<"accountid">>=>AccountId,<<"unixtime">>=>UnixTime,<<"token">>=>Token}};
     _->
-      ErrorCode = ?MAKE_ERROR_CODE(60002,CanLogin),
+      ErrorCode = ?MAKE_ERROR_CODE(60003,CanLogin),
       {error,ErrorCode}
   end;
 
+%%补全账号
+handle(60004,Common,Data)->
+  AccountId = maps:get(<<"account_id">>, Common),
+  AccountName = maps:get(<<"accountname">>,Data),
+  Password = maps:get(<<"password">>,Data),
+  RetCode = lib_account:update_acc_pass(AccountId,AccountName,Password),
+  case RetCode of
+    0->
+      {ok,#{<<"result">>=>0}};
+    _->
+      ErrorCode = ?MAKE_ERROR_CODE(60004,RetCode),
+      {error,ErrorCode}
+  end;
 
 handle(_Code,_Common,_Data)->
   request_dispatcher:routing_fail(_Code).
