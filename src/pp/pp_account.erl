@@ -70,5 +70,21 @@ handle(60004,Common,Data)->
       {error,ErrorCode}
   end;
 
+%%保存打款数据
+handle(60009,Common,Data)->
+  PostTime = maps:get(<<"timestamp">>,Common),
+  ClientIp = maps:get(<<"client_ip">>,Common),
+  PayId = maps:get(<<"realname">>,Data),
+  Phone = maps:get(<<"phone">>,Data),
+  Province = maps:get(<<"province">>,Data),
+  Age = maps:get(<<"age">>,Data),
+  Sex = maps:get(<<"sex">>,Data),
+  Wechat = maps:get(<<"wechat">>,Data),
+  Alipay = maps:get(<<"alipay">>,Data),
+  BankName = maps:get(<<"bank_name">>,Data),
+  BankNumber = maps:get(<<"bank_number">>,Data),
+  mysql:run_prepare(pay_report_insert,[PayId,Province,Phone,Age,Sex,Alipay,Wechat,BankName,BankNumber,ClientIp,PostTime]),
+  {ok,#{<<"result">>=>0}};
+
 handle(_Code,_Common,_Data)->
   request_dispatcher:routing_fail(_Code).

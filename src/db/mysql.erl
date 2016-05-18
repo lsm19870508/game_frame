@@ -59,6 +59,7 @@ start_mysql_pools() ->
 %%进行某些语句的预编译
 prepare_queries()->
   ok = emysql:prepare(account_replace, <<"replace into account set id=?">>),
+  ok = lib_account:prepare_quries(),
   ok.
 
 %% ====================================================================

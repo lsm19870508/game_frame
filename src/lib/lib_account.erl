@@ -19,6 +19,12 @@
 -export([do_login/2]).
 -export([do_fast_login/1]).
 -export([update_acc_pass/3]).
+-export([prepare_quries/0]).
+
+%%初始化prepare某些sql
+prepare_quries()->
+  ok = emysql:prepare(pay_report_insert,<<"insert into pay_report values(?,?,?,?,?,?,?,?,?,?,?,?)">>),
+  ok.
 
 %%token是否有效
 is_token_valid(AccountId,Token)->
