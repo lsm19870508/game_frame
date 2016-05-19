@@ -77,7 +77,7 @@ respond_json(Code, Json, Req) ->
   Body = jsx:encode(Json),
   % 加密
   {ok, Body2, Head} = lib_crypto:encrypt(Body),
-  cowboy_req:reply(Code,[Head, {<<"Content-Type">>, <<"application/json; charset=utf-8">>}], Body2, Req).
+  cowboy_req:reply(Code,[Head, {<<"Content-Type">>, <<"application/json; charset=utf-8">>},{<<"Access-Control-Allow-Origin">>,<<"http://121.43.97.11">>}], Body2, Req).
 
 respond_invalid_request(Req) ->
   Status = ?STATUS_INVALID_REQUEST,

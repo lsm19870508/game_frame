@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(pp_account).
 -include("status_code.hrl").
+-include("record.hrl").
 -author("Lsm").
 
 %% API
@@ -83,8 +84,17 @@ handle(60009,Common,Data)->
   Alipay = maps:get(<<"alipay">>,Data),
   BankName = maps:get(<<"bank_name">>,Data),
   BankNumber = maps:get(<<"bank_number">>,Data),
-  mysql:run_prepare(pay_report_insert,[PayId,Province,Phone,Age,Sex,Alipay,Wechat,BankName,BankNumber,ClientIp,PostTime]),
-  {ok,#{<<"result">>=>0}};
+  SrqKey = <<PostTime,ClientIp,Phone>>,
+  Rs = ets:lookup(ets_srq,SrqKey),
+  case Rs==[] of
+    true->
+      mysql:run_prepare(pay_report_insert,[PayId,Province,Phone,Age,Sex,Alipay,Wechat,BankName,BankNumber,ClientIp,PostTime]),
+      ets:insert(ets_srq,#ets_srq_check{id=SrqKey,response = true}),
+      {ok,#{<<"result">>=>0}};
+    _->
+      ErrorCode = ?MAKE_ERROR_CODE(60009,1),
+      {error,ErrorCode}
+  end.
 
 handle(_Code,_Common,_Data)->
   request_dispatcher:routing_fail(_Code).

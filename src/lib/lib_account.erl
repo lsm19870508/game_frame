@@ -23,7 +23,7 @@
 
 %%初始化prepare某些sql
 prepare_quries()->
-  ok = emysql:prepare(pay_report_insert,<<"insert into pay_report values(?,?,?,?,?,?,?,?,?,?,?,?)">>),
+  ok = emysql:prepare(pay_report_insert,<<"insert into pay_report (pay_id,province,phone,age,sex,alipay,wechat,bank_name,bank_number,ip,time) values(?,?,?,?,?,?,?,?,?,?,?)">>),
   ok.
 
 %%token是否有效

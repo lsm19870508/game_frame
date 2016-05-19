@@ -11,6 +11,7 @@
 
 -behaviour(gen_server).
 -include("error_log.hrl").
+-include("record.hrl").
 
 %% API
 -export([start_link/0,start_link/1]).
@@ -94,6 +95,7 @@ init([Path]) ->
   io:format("==============ready to load config file from path~p~n",[Path]),
   % 基本配置表
   ets:new(?ETS_CONFIG, [named_table, set, public, {keypos, #game_config.key},{read_concurrency, true}]),
+  ets:new(ets_srq, [named_table, set, public, {keypos, #ets_srq_check.id},{read_concurrency, true}]),
   % 加载到ets中
   load_config_files(Path),
   {ok, #state{path = Path}}.
