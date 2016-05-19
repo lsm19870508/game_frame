@@ -94,7 +94,7 @@ handle(60009,Common,Data)->
     _->
       ErrorCode = ?MAKE_ERROR_CODE(60009,1),
       {error,ErrorCode}
-  end.
+  end;
 
 handle(_Code,_Common,_Data)->
   request_dispatcher:routing_fail(_Code).
